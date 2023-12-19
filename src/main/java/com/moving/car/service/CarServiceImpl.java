@@ -4,10 +4,11 @@ import com.moving.car.dto.CarDTO;
 import com.moving.car.mapper.CarMapper;
 import com.moving.car.model.Car;
 import com.moving.car.repository.CarRepository;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,13 +22,12 @@ public class CarServiceImpl implements CarService {
         this.carRepository = carRepository;
         this.carMapper = carMapper;
     }
-
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public void add(CarDTO carDTO) {
-        System.out.println("DTO = " + carDTO);
         Car car = carMapper.convertToCar(carDTO);
-        System.out.println(car);
         carRepository.save(car);
     }
+    @Transactional
     public void addAll(List<CarDTO> carList) {
         List<Car> cars = carList.stream()
                         .map((carDTO) -> carMapper.convertToCar(carDTO))
