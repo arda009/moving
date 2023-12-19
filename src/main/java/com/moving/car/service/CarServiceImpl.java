@@ -30,7 +30,7 @@ public class CarServiceImpl implements CarService {
     @Transactional
     public void addAll(List<CarDTO> carList) {
         List<Car> cars = carList.stream()
-                        .map((carDTO) -> carMapper.convertToCar(carDTO))
+                        .map(carMapper::convertToCar)
                         .collect(Collectors.toList());
         carRepository.saveAll(cars);
     }
